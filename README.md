@@ -1,38 +1,123 @@
-# NoteKeeperApp – Activity 05
+# APIConnectApp – Activity 06
 
 **Name:** Gerald Mamasalanang  
 **Section:** DIT 3-1  
-**Activity Title:** SQLite CRUD and Data Persistence  
-**Repository Name:** DIT3-1-GeraldMamasalanang-Act05  
+**Activity Title:** REST API Integration with Retrofit  
+**Repository Name:** DIT3-1-GeraldMamasalanang-Act06  
 
 ---
 
 ## Project Description
-This project is an Android app called **NoteKeeperApp** that allows users to create, view, edit, and delete notes using an **SQLite database**.  
-The app demonstrates data persistence, meaning all notes remain available even after closing and reopening the app.  
+
+This project is an Android app called **APIConnectApp** that fetches and displays real-time weather data from the **OpenWeatherMap REST API**.  
+The app demonstrates networking capabilities using **Retrofit** for HTTP communication and **Gson** for JSON parsing.
 
 The main features include:
-- A **RecyclerView** that lists all saved notes  
-- A **Floating Action Button (FAB)** to add new notes  
-- Full **CRUD** functionality (Create, Read, Update, Delete)  
-- An **SQLiteOpenHelper** class to manage database creation and versioning  
+- Search weather by **city name**
+- Display **temperature**, **weather description**, and **conditions**
+- **Network connectivity checking** before API calls
+- Proper **error handling** for invalid cities and API issues
+- Clean **Material Design UI** with ProgressBar loading states
+
+---
+
+## Setup Instructions
+
+### 1. Get an OpenWeatherMap API Key
+
+1. Go to [OpenWeatherMap API](https://openweathermap.org/api)
+2. Sign up for a free account
+3. Navigate to your API keys section
+4. Copy your API key
+
+> **Note:** New API keys can take up to **2 hours** to activate after creation.
+
+### 2. Configure the API Key
+
+1. Open `app/src/main/assets/config.properties`
+2. Replace the placeholder with your actual API key:
+   ```properties
+   api_key=your_actual_api_key_here
+   ```
+
+### 3. Build and Run
+
+1. Open the project in Android Studio
+2. Build the project (Build → Make Project)
+3. Run on device or emulator
+4. Search for weather by entering a city name
+
+---
+
+## Project Architecture
+
+```
+app/src/main/java/com/example/apiconnectapp/
+├── MainActivity.kt              # Main activity handling UI and API calls
+├── adapter/
+│   └── WeatherAdapter.kt        # RecyclerView adapter for weather display
+├── config/
+│   └── ConfigManager.kt         # API key configuration manager
+├── model/
+│   ├── WeatherResponse.kt       # Data class for API response
+│   └── WeatherDescription.kt    # Data class for weather details
+└── network/
+    ├── RetrofitClient.kt        # Singleton Retrofit instance
+    └── WeatherApiService.kt     # API interface definition
+```
+
+---
+
+## Technologies Used
+
+- **Kotlin** - Primary programming language
+- **Retrofit 2** - Type-safe HTTP client for API calls
+- **Gson** - JSON serialization/deserialization
+- **Material Design** - Modern UI components
+- **RecyclerView** - Efficient list display
+- **ConnectivityManager** - Network status checking
+
+---
+
+## Troubleshooting
+
+| Error | Solution |
+|-------|----------|
+| "Invalid API key" | Wait up to 2 hours for new keys to activate, or generate a new key |
+| "Please configure your API key" | Add your API key to `assets/config.properties` |
+| "No internet connection" | Check device/emulator network connectivity |
+| "City not found" | Verify the city name spelling |
+
+### Test Your API Key
+
+Open this URL in your browser (replace with your key):
+```
+https://api.openweathermap.org/data/2.5/weather?q=London&appid=YOUR_API_KEY
+```
+
+If you see JSON weather data, your key is active. If you see a 401 error, wait for activation.
 
 ---
 
 ## Reflection
 
-**1. How did you implement CRUD using SQLite?**  
-I created a helper class that extends `SQLiteOpenHelper` to handle the database. Inside it, I defined a `notes` table with columns for `id`, `title`, `content`, and `timestamp`. I used SQLite queries for each operation — `insert()` for creating notes, `query()` for reading, `update()` for editing, and `delete()` for removing notes. The results were displayed using a **RecyclerView**.
+**1. How did you implement API integration using Retrofit?**  
+I created a `WeatherApiService` interface with a `@GET` annotation to define the weather endpoint. The `RetrofitClient` singleton configures Retrofit with the base URL and Gson converter. API calls are made asynchronously using Retrofit's `enqueue()` method with callbacks for success and failure handling.
 
-**2. What challenges did you face in maintaining data persistence?**  
-The main challenge was making sure the RecyclerView updates correctly after adding or editing a note. I also had to make sure the database connection closed properly to avoid memory leaks. Debugging the refresh logic after performing CRUD operations was also a bit tricky.
+**2. What challenges did you face with network operations?**  
+The main challenge was handling the API key activation delay - new OpenWeatherMap keys can take hours to become active. I also had to implement proper error handling for various HTTP status codes (401 for invalid key, 404 for city not found) and network connectivity checks before making requests.
 
-**3. How could you improve performance or UI design in future versions?**  
-In future versions, I’d like to add features like note searching, sorting by date, and using **Room Database** for better performance and cleaner code. For the UI, I would improve the layout with better spacing, modern colors, and maybe add animations when notes are added or deleted.
+**3. How could you improve the app in future versions?**  
+Future improvements could include: caching weather data for offline access, adding a 5-day forecast feature, implementing location-based weather using GPS, adding weather icons, and using Kotlin Coroutines instead of callbacks for cleaner async code.
 
 ---
 
 ## How to Run
+
 1. Clone this repository:
    ```bash
-   git clone git@github.com:mamasalanang-gerald/DIT3-1-GeraldMamasalanang-Act05.git
+   git clone git@github.com:mamasalanang-gerald/DIT3-1-GeraldMamasalanang-Act06.git
+   ```
+2. Open in Android Studio
+3. Add your OpenWeatherMap API key to `app/src/main/assets/config.properties`
+4. Build and run on emulator or device
